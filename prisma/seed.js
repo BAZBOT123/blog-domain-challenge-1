@@ -4,9 +4,16 @@ const prisma = new PrismaClient();
 async function seed() {
     const createdUsers = await prisma.user.create({
         data: {
+            username: 'happy',
+            email: 'test@123.com',
+            password: 'chilli-sauce'
+        }
+    });
+    const createdUsersTwo = await prisma.user.create({
+        data: {
             username: 'notHappy',
-            email: "test@123.com",
-            password: "chilli-sauce"
+            email: 'test2@123.com',
+            password: 'mayonnaise'
         }
     });
 
@@ -16,9 +23,9 @@ async function seed() {
 
     const createdProfile = await prisma.profile.create({
         data: {
-            dob: "10.20.2019",
-            picture: "http://example.com",
-            bio: "loremnmsdnksndssdkjskdnskdnsndkns",
+            dob: '10.20.2019',
+            picture: 'http://example.com',
+            bio: 'loremnmsdnksndssdkjskdnskdnsndkns',
             user: {
                 connect: {
                     id: createdUsers.id
@@ -30,10 +37,10 @@ async function seed() {
 
     const createdPost = await prisma.post.create({
         data: {
-            title: "Kebab Shop 2",
-            content: "How to make garlic sauce, step by step!",
+            title: 'Kebab Shop 2',
+            content: 'How to make garlic sauce, step by step!',
             isPublished: true,
-            picture: "http://kebab.com",
+            picture: 'http://kebab.com',
             user: {
                 connect: {
                     id: createdUsers.id
@@ -44,7 +51,7 @@ async function seed() {
 
     const createComment = await prisma.comment.create({
         data: {
-            content: "Too much content to create",
+            content: 'Too much content to create.',
             user: {
                 connect: {
                     id: createdUsers.id
@@ -58,6 +65,21 @@ async function seed() {
         }
     })
 
+    const createdReply = await prisma.comment.create({
+        data: {
+            content: 'I think so too!',
+            user: {
+                connect: {
+                    id: createdUsersTwo.id
+                }
+            },
+            comments: {
+                connect: {
+                    id: createComment.id
+                }
+            }
+        }
+    })
 
 
     // Don't edit any of the code below this line

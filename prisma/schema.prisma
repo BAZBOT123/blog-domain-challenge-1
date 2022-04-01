@@ -16,9 +16,9 @@ model User {
   username  String    @unique @db.VarChar(10)
   email     String    @unique
   password  String
-  comment   Comment[]
+  comments  Comment[]
   profile   Profile?
-  post      Post[]
+  posts     Post[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -32,7 +32,6 @@ model Profile {
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
 }
 
 model Post {
@@ -41,7 +40,7 @@ model Post {
   content     String    @db.VarChar(255)
   isPublished Boolean   @default(false)
   picture     String?
-  comment     Comment[]
+  comments    Comment[]
   userId      Int       @unique
   user        User      @relation(fields: [userId], references: [id])
   createdAt   DateTime  @default(now())
@@ -49,12 +48,18 @@ model Post {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  content   String   @db.VarChar(250)
+  id      Int    @id @default(autoincrement())
+  content String @db.VarChar(250)
+
+  replyId  Int?
+  reply    Comment?  @relation("ReplyComment", fields: [replyId], references: [id])
+  comments Comment[] @relation("ReplyComment")
+
+
   userId    Int      @unique
   user      User     @relation(fields: [userId], references: [id])
-  postId    Int      @unique
-  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int?      @unique
+  post      Post?     @relation(fields: [postId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
